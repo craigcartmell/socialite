@@ -215,7 +215,7 @@ abstract class AbstractProvider implements ProviderContract
     }
 
     /**
-     * Get the access token for the given code.
+     * Get the refresh token for the given code.
      *
      * @param  string  $code
      * @return string

@@ -58,6 +58,21 @@ class FacebookProvider extends AbstractProvider implements ProviderInterface
     }
 
     /**
+     * Get the refresh token for the given code.
+     *
+     * @param  string  $code
+     * @return string
+     */
+    public function getRefreshToken($code)
+    {
+        $response = $this->getHttpClient()->get($this->getTokenUrl(), [
+            'query' => $this->getTokenFields($code),
+        ]);
+
+        return $this->parseRefreshToken($response->getBody());
+    }
+
+    /**
      * {@inheritdoc}
      */
     protected function parseAccessToken($body)
@@ -65,6 +80,16 @@ class FacebookProvider extends AbstractProvider implements ProviderInterface
         parse_str($body);
 
         return $access_token;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function parseRefreshToken($body)
+    {
+        parse_str($body);
+
+        return $refresh_token;
     }
 
     /**

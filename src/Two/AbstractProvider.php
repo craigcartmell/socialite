@@ -60,7 +60,7 @@ abstract class AbstractProvider implements ProviderContract
      *
      * @var string
      */
-    protected $responseBody = [];
+    protected $responseBody;
 
     /**
      * Create a new provider instance.

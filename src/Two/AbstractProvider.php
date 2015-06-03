@@ -251,11 +251,12 @@ abstract class AbstractProvider implements ProviderContract
     /**
      * Get the access token from the token response body.
      *
+     * @param  string  $body
      * @return string
      */
-    protected function parseAccessToken()
+    protected function parseAccessToken($body)
     {
-        return json_decode($this->responseBody, true)['access_token'];
+        return json_decode($body, true)['access_token'];
     }
 
     /**

@@ -56,13 +56,6 @@ abstract class AbstractProvider implements ProviderContract
     protected $stateless = false;
 
     /**
-     * The response body from the auth request.
-     *
-     * @var string
-     */
-    protected $responseBody;
-
-    /**
      * Create a new provider instance.
      *
      * @param  Request  $request
@@ -186,7 +179,7 @@ abstract class AbstractProvider implements ProviderContract
             $token = $this->getAccessToken($this->getCode())
         ));
 
-        return $user->setToken($token)->setRefreshToken($this->parseRefreshToken());
+        return $user->setToken($token)->setRefreshToken($this->getRefreshToken($this->getCode()));
     }
 
     /**
@@ -218,7 +211,23 @@ abstract class AbstractProvider implements ProviderContract
             'body' => $this->getTokenFields($code),
         ]);
 
-        return $this->setResponseBody($response->getBody())->parseAccessToken($response->getBody());
+        return $this->parseAccessToken($response->getBody());
+    }
+
+    /**
+     * Get the access token for the given code.
+     *
+     * @param  string  $code
+     * @return string
+     */
+    public function getRefreshToken($code)
+    {
+        $response = $this->getHttpClient()->post($this->getTokenUrl(), [
+            'headers' => ['Accept' => 'application/json'],
+            'body' => $this->getTokenFields($code),
+        ]);
+
+        return $this->parseRefreshToken($response->getBody());
     }
 
     /**
@@ -261,12 +270,13 @@ abstract class AbstractProvider implements ProviderContract
 
     /**
      * Get the refresh token from the token response body.
-
+     *
+     * @param  string  $body
      * @return string
      */
-    protected function parseRefreshToken()
+    protected function parseRefreshToken($body)
     {
-        return json_decode($this->responseBody, true)['refresh_token'];
+        return json_decode($body, true)['refresh_token'];
     }
 
     /**

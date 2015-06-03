@@ -259,7 +259,7 @@ abstract class AbstractProvider implements ProviderContract
     }
 
     /**
-     * Get the access token from the token response body.
+     * Get the refresh token from the token response body.
 
      * @return string
      */
